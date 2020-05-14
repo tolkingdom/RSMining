@@ -144,11 +144,12 @@ def drop(oretype):
                 humanclick()
         if oretype == "iron":
             l = list(imgmatchscreenall('img/ironitem.png',region1=(inventory)))
-            pyautogui.keyDown("shift")
+            pyautogui.keyDown('shift')
             for i in l:
+                pyautogui.keyDown('shift')
                 humanmoveobj(i,safe='yes')        
                 humanclick()
-            pyautogui.keyUp("shift")
+            pyautogui.keyUp('shift')
     except: 
         return
 
