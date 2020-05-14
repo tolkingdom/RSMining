@@ -33,14 +33,14 @@ def mine(oretype,queuexy=None):
         humanmovexy(x,y)
     qxy = None
     xtest,ytest = pyautogui.position()
-    if len(list(imgmatchscreenall('img/minerocks.png',region=(client),threshold=0.60))) > 0:
+    if len(list(imgmatchscreenall('img/minerocks.png',region1=(client),threshold=0.60))) > 0:
         print("matched mine tooltip")
         humanclick()
         oldmousepos = pyautogui.position()
         time.sleep(uniform(0.100,0.130))
         attempts1=0
-        while len(list(imgmatchscreenall('img/swing.png',region=(textnotif)))) == 0 and (attempts1!=100): 
-            if len(list(imgmatchscreenall('img/noore.png',region=(textnotif)))) > 0:
+        while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif)))) == 0 and (attempts1!=100): 
+            if len(list(imgmatchscreenall('img/noore.png',region1=(textnotif)))) > 0:
                 print("no ore here, retarting mine")
                 failedCount+=1
                 print("Failed count is at " + str(failedCount))
@@ -91,16 +91,16 @@ def colormatch(oretype,move="no"):
                 print (x,y)
                 return x,y
 
-def imgmatchscreen(small, region=None, threshold=0.7):
-    img = numpy.array(pyautogui.screenshot(region=region))
+def imgmatchscreen(small, region1=None, threshold=0.7):
+    img = numpy.array(pyautogui.screenshot(region=region1))
     image = img[:, :, ::-1].copy()
     template = cv2.imread(small) 
     h,w,ch = template.shape
     result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
     x,y = max_loc
-    if region!=None:
-        x0,y0 = region[:2]
+    if region1!=None:
+        x0,y0 = region1[:2]
         x=x+x0
         y=y+y0
     imgbox = x,y,w,h
@@ -108,9 +108,9 @@ def imgmatchscreen(small, region=None, threshold=0.7):
     return imgbox
 
 
-def imgmatchscreenall(small, region=None, threshold=0.6):
+def imgmatchscreenall(small, region1=None, threshold=0.6):
     locbox = []
-    img = numpy.array(pyautogui.screenshot(region=region))
+    img = numpy.array(pyautogui.screenshot(region=region1))
     image = img[:, :, ::-1].copy()
     template = cv2.imread(small) 
     h,w,ch = template.shape
@@ -121,8 +121,8 @@ def imgmatchscreenall(small, region=None, threshold=0.6):
     for i in locations:
         #print(i)
         x,y =  i
-        if region!=None:
-            x0,y0 = region[:2]
+        if region1!=None:
+            x0,y0 = region1[:2]
             x=x+x0
             y=y+y0
         locbox.append((x,y,w,h))
@@ -133,25 +133,22 @@ def imgmatchscreenall(small, region=None, threshold=0.6):
 def drop(oretype):
     try:
         if oretype == "copper":
-            l = list(imgmatchscreenall('img/copperitem.png',region=(inventory)))
+            l = list(imgmatchscreenall('img/copperitem.png',region1=(inventory)))
             for i in l:
                 humanmoveobj(i,safe='yes')
                 humanrclick()
                 try:
-                    humanmoveobj(imgmatchscreenall('img/dropcop.png',region=(client)),safe='yes')
+                    humanmoveobj(imgmatchscreenall('img/dropcop.png',region1=(client)),safe='yes')
                 except:
-                    humanmoveobj(imgmatchscreen('img/dropyellow.png',region=(client)),safe=yes)                
+                    humanmoveobj(imgmatchscreen('img/dropyellow.png',region1=(client)),safe=yes)                
                 humanclick()
         if oretype == "iron":
-            l = list(imgmatchscreenall('img/ironitem.png',region=(inventory)))
+            l = list(imgmatchscreenall('img/ironitem.png',region1=(inventory)))
+            pyautogui.keyDown("shift")
             for i in l:
-                humanmoveobj(i,safe='yes')
-                humanrclick()
-                try:
-                    humanmoveobj(imgmatchscreen('img/dropiron.png',region=(client)),safe='yes')
-                except:
-                    humanmoveobj(imgmatchscreen('img/dropyellow.png',region=(client)),safe='yes')                
+                humanmoveobj(i,safe='yes')        
                 humanclick()
+            pyautogui.keyUp("shift")
     except: 
         return
 
@@ -163,7 +160,7 @@ def worldhop():
 
 def nospace():
     print("no inv space left")
-    return len(list(imgmatchscreenall('img/space.png',region=(inventory),threshold=.45))) ==0
+    return len(list(imgmatchscreenall('img/space.png',region1=(inventory),threshold=.45))) ==0
 
 def isfull(oretype):
     return (orecount(oretype)>=24)
@@ -171,22 +168,22 @@ def isfull(oretype):
 
 def orecount(oretype):
     if oretype == "copper":
-        return len(list(imgmatchscreenall('img/copperitem.png',region=(inventory))))
+        return len(list(imgmatchscreenall('img/copperitem.png',region1=(inventory))))
     if oretype == "iron":
-        return len(list(imgmatchscreenall('img/ironitem.png',region=(inventory))))
+        return len(list(imgmatchscreenall('img/ironitem.png',region1=(inventory))))
     else:
         return 0
 
 
 def checkstats():
     rando = uniform(1.1,3.2)
-    stat = imgmatchscreen("img/statbar.png", region=client)
+    stat = imgmatchscreen("img/statbar.png", region1=client)
     humanmoveobj(stat,safe='yes')
     humanclick()
-    minestat = imgmatchscreen("img/miningstat.png", region=client)
+    minestat = imgmatchscreen("img/miningstat.png", region1=client)
     humanmoveobj(minestat)
     time.sleep(rando)
-    bag = imgmatchscreen("img/bag.png", region=client)
+    bag = imgmatchscreen("img/bag.png", region1=client)
     humanmoveobj(bag)
     humanclick()
 
