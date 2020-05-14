@@ -9,11 +9,12 @@ import numpy
 import datetime
 import bezmouse
 import os
+import scrot 
 
 from pathlib import Path
 from PIL import Image
 
-dirname1 = os.path.dirname(__file__)
+dirname1 = os.path.dirname(os.path.abspath(__file__))
 print(dirname1)
 os.chdir(dirname1)
 
@@ -261,7 +262,7 @@ def humanrclick():
     time.sleep((timer/2) - 0.00009)
 
 def calibrate():
-    l,t,w,h = imgmatchscreen('C:/Programming/Python/RSMining/CopperBot/img/runelite.png')
+    l,t,w,h = imgmatchscreen('img/runelite.png')
     print ("calibrated to : " + str((l,t,w,h)))
     return l,t+27
 
