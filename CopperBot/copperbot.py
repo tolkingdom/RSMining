@@ -9,7 +9,6 @@ import numpy
 import datetime
 import bezmouse
 import os
-import scrot 
 
 from pathlib import Path
 from PIL import Image
