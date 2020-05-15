@@ -185,7 +185,7 @@ def bank(skiphalf='no'):
             time.sleep(1.0)
             # while inMotion() and increment<=400:
             #     time.sleep(0.1)
-            if i != listoflist[-1]
+            if i != listoflist[-1]:
                 imgmatchscreen(listoflist[i+1],region=mapbox)
             
             increment = 0
@@ -219,8 +219,10 @@ def bank(skiphalf='no'):
         humanclick()
         time.sleep(1.0)
         increment = 0
-        while inMotion() and increment<=400:
-            time.sleep(0.5)
+        # while inMotion() and increment<=400:
+        #     time.sleep(0.5)
+        if i != listoflist[-1]:
+            imgmatchscreen(listoflist[i+1],region=mapbox)
         increment = 0
     if colormatch(oretype) == None:
         bank(skiphalf='yes')
