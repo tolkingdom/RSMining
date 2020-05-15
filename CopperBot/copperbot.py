@@ -133,7 +133,6 @@ def imgmatchscreen(small, region1=None, threshold=0.7):
         result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
         x,y = max_loc
-
     print("max val for this match was "+str(max_val))
     if region1!=None:
         x0,y0 = region1[:2]
@@ -184,8 +183,11 @@ def bank(skiphalf='no'):
             humanmovexy(a+randint(9,11),b+randint(-2,2))
             humanclick()
             time.sleep(1.0)
-            while inMotion() and increment<=400:
-                time.sleep(0.1)
+            # while inMotion() and increment<=400:
+            #     time.sleep(0.1)
+            if i != listoflist[-1]
+                imgmatchscreen(listoflist[i+1],region=mapbox)
+            
             increment = 0
         checkrun()
         while(colormatch(inputlist=bankdep) == None):
