@@ -121,17 +121,19 @@ def colormatch(oretype='iron',move="no",inputlist=None):
 
 # pyautogui.pixelMatchesColor
 def imgmatchscreen(small, region1=None, threshold=0.7):
-    ssht = pyautogui.screenshot(imageFilename=None, region=region1)
-    time.sleep(0.01)
-    img = numpy.array(ssht)
-    image = img[:, :, ::-1].copy()
-    template = cv2.imread(small,cv2.IMREAD_COLOR) 
-    h,w,ch = template.shape
-    result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-    x,y = max_loc
-    #cv2.imshow('t',result)
-    #cv2.waitKey()
+    max_val=0.0
+    while max_val <= threshold:
+        print("starting img match loop")
+        ssht = pyautogui.screenshot(imageFilename=None, region=region1)
+        time.sleep(0.01)
+        img = numpy.array(ssht)
+        image = img[:, :, ::-1].copy()
+        template = cv2.imread(small,cv2.IMREAD_COLOR) 
+        h,w,ch = template.shape
+        result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+        x,y = max_loc
+
     print("max val for this match was "+str(max_val))
     if region1!=None:
         x0,y0 = region1[:2]
@@ -177,12 +179,13 @@ def bank(skiphalf='no'):
     listoflist = [zero,one,two,three,four,five]
     if skiphalf == 'no':
         for i in listoflist:
+            time.sleep(0.1)
             a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
             humanmovexy(a+randint(9,11),b+randint(-2,2))
             humanclick()
             time.sleep(1.0)
             while inMotion() and increment<=400:
-                time.sleep(0.5)
+                time.sleep(0.1)
             increment = 0
         checkrun()
         while(colormatch(inputlist=bankdep) == None):
@@ -208,6 +211,7 @@ def bank(skiphalf='no'):
 
     
     for i in reversed(listoflist):
+        time.sleep(0.1)
         a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
         humanmovexy(a-randint(9,11),b+randint(-2,2))
         humanclick()
