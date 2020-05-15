@@ -17,88 +17,122 @@ dirname1 = os.path.dirname(os.path.abspath(__file__))
 print(dirname1)
 os.chdir(dirname1)
 
-def mine(oretype,queuexy=None):
-    global failedCount
-    print("starting mine")
+def mine(oretype):
     global qxy
-    global oldmousepos
-    orig = orecount(oretype)
-    if (qxy==None):
-        x,y = colormatch(oretype)
-    else:
-        x,y = qxy
-    statcheck=randint(1,50)
-    #while oldmousepos[0]-40 <= x <= oldmospos[0]+40
-    if pyautogui.position() != (x,y):
-        humanmovexy(x,y)
-    qxy = None
-    xtest,ytest = pyautogui.position()
+    global failedCount
+    clicked=False
+    statrand = randint(1,100)
+    print("Starting Mine")
+    oldcount = orecount(oretype)
+    # if qxy == None:
+    #     qxy = colormatch(oretype)
+    # if pyautogui.position != qxy:
+    #     humanmovexy(qxy[0],qxy[1])
     if len(list(imgmatchscreenall('img/minerocks.png',region1=(client),threshold=0.60))) > 0:
-        print("matched mine tooltip")
-        humanclick()
-        oldmousepos = pyautogui.position()
-        time.sleep(uniform(0.100,0.130))
-        attempts1=0
-        while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif)))) == 0 and (attempts1!=100): 
-            if len(list(imgmatchscreenall('img/noore.png',region1=(textnotif)))) > 0:
-                print("no ore here, retarting mine")
-                failedCount+=1
-                print("Failed count is at " + str(failedCount))
-                return
-            attempts1+=1
-            time.sleep(0.05)
+        oldcount = orecount(oretype)
+        if greycursor() == False:
+            humanclick()
+            clicked=True
+            time.sleep(uniform(0.04,0.09))
+            if statrand>=90:
+                randomcameramove(randint(1,2))
+        else:
+            qxy=None
+           
     else:
-        return
-    attempts = 0
-    if qxy == None:
-        qxy = colormatch(oretype,move="yes")
-        humanmovexy(qxy[0],qxy[1])
-    if statcheck==5:
+        qxy = None
+    if statrand==50:
         checkstats()
-        attempts+=10
-    while orecount(oretype) == orig and attempts<=20:
-        print("waiting on ore to mine")
-        time.sleep(0.5)
-        attempts+=1
-
-
-
-    if failedCount>0:
-        failedCount-=1
-
-
-def colormatch(oretype,move="no"):
-    print("starting color match")
-    if oretype == "copper":
-        rgblist = (113,73,41),(91,59,33),(82,53,29),(79,50,27),(129,83,46),(101, 65, 35),(95, 61, 34),(75, 48, 26),(69, 44, 25),(72, 47, 25)
-        #img = pyautogui.screenshot(region=gamewindow)
-        #pixel = pyautogui.pixel(1,1)
-    elif oretype == "iron":
-        rgblist = (64, 34, 23), (61, 31, 22), (47, 25, 15), (34, 17, 12), (50, 26, 17), (43, 22, 14), (30, 15, 10), (57, 30, 20), (26, 14, 9), (39, 20, 14), (54,27,19)
+        return
     
-    im = pyautogui.screenshot(region=gamewindow)
-    
-    pimpg = im.load()
-    w,h = im.size
-    for k in range(0,(w*h)):
-        x = randint(0,w-1)
-        y = randint(0,h-1)
-        for i in rgblist:
-            if pimpg[x,y] == i:
-                print("found match at: " + str(x)+" "+str(y))
-                x=x+gamewindow[0]
-                y=y+gamewindow[1]
-                print (x,y)
-                return x,y
+    # while inMotion():
+    #     print("Moving")
+    increment=0
+    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.60))) == 0 and increment <=20 and clicked: 
+        increment+=2
+        time.sleep(0.2)
+    if increment == 20:
+        failedCount+=1
+        print("failcount incremeted to "+str(failedCount))
+        return
 
+    qxy = colormatch(oretype)
+    try:
+        humanmovexy(qxy[0],qxy[1])
+    except:
+        print("move failed during mine")
+    increment=0
+    while orecount(oretype) <= oldcount and increment <= 20 and clicked:
+        print("Waiting for ore")
+        increment+=1
+        time.sleep(0.2)
+    if increment >= 20:
+        failedCount+=1
+        print("failcount incremeted to "+str(failedCount))
+    
+    return
+            
+
+
+
+def colormatch(oretype='iron',move="no",inputlist=None):
+    try:
+        print("starting color match")
+        
+        if oretype == "copper":
+            rgblist = (113,73,41),(91,59,33),(82,53,29),(79,50,27),(129,83,46),(101, 65, 35),(95, 61, 34),(75, 48, 26),(69, 44, 25),(72, 47, 25)
+            #img = pyautogui.screenshot(region=gamewindow)
+            #pixel = pyautogui.pixel(1,1)
+        elif oretype == "iron":
+            rgblist = (64, 34, 23), (61, 31, 22), (47, 25, 15), (34, 17, 12), (50, 26, 17), (43, 22, 14), (30, 15, 10), (57, 30, 20), (26, 14, 9), (39, 20, 14), (54,27,19)
+        if inputlist != None: 
+            rgblist = inputlist
+        im = pyautogui.screenshot(region=gamewindow)
+        
+        pimpg = im.load()
+        w,h = im.size
+        for k in range(0,(w*h)):
+            x = randint(0,w-1)
+            y = randint(0,h-1)
+            for i in rgblist:
+                if pimpg[x,y] == i:
+                    print("found match at: " + str(x)+" "+str(y))
+                    x=x+gamewindow[0]
+                    y=y+gamewindow[1]
+                    print (x,y)
+                    return x,y
+    except:
+        print("No color found")
+        return None
+
+# def pixelmap(pixlist,tolerance=30):
+#     im = pyautogui.screenshot(region=mapbox)
+#     pimpg = im.load()
+#     w,h = im.size
+#     for k in range(0,(w*h)):
+#         x = randint(0,w-1)
+#         y = randint(0,h-1)
+#         for i in pixlist:
+#             exR,exG,exB = i[0],i[1],i[2]
+#         r,g,b = pimpg[x,y]       
+#         if (abs(r - exR) <= tolerance) and (abs(g - exG) <= tolerance) and (abs(b - exB) <= tolerance):
+#             return x+mapbox[0],y+mapbox[1]
+
+
+# pyautogui.pixelMatchesColor
 def imgmatchscreen(small, region1=None, threshold=0.7):
-    img = numpy.array(pyautogui.screenshot(region=region1))
+    ssht = pyautogui.screenshot(imageFilename=None, region=region1)
+    time.sleep(0.01)
+    img = numpy.array(ssht)
     image = img[:, :, ::-1].copy()
-    template = cv2.imread(small) 
+    template = cv2.imread(small,cv2.IMREAD_COLOR) 
     h,w,ch = template.shape
     result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
     x,y = max_loc
+    #cv2.imshow('t',result)
+    #cv2.waitKey()
+    print("max val for this match was "+str(max_val))
     if region1!=None:
         x0,y0 = region1[:2]
         x=x+x0
@@ -128,6 +162,95 @@ def imgmatchscreenall(small, region1=None, threshold=0.6):
         locbox.append((x,y,w,h))
     return locbox
 
+def bank(skiphalf='no'):
+    increment = 0
+    humanmoveobj((x0+555,y0+15,15,15))
+    time.sleep(uniform(0.1,0.2))
+    humanclick()
+    zero = "img/0.png"
+    one = "img/1.png"
+    two = "img/2.png"
+    three = "img/3.png"
+    four = "img/4.png"
+    five = "img/5.png"
+    bankdep = (228,83,83),(227,82,82)
+    listoflist = [zero,one,two,three,four,five]
+    if skiphalf == 'no':
+        for i in listoflist:
+            a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
+            humanmovexy(a+randint(9,11),b+randint(-2,2))
+            humanclick()
+            time.sleep(1.0)
+            while inMotion() and increment<=400:
+                time.sleep(0.5)
+            increment = 0
+        checkrun()
+        while(colormatch(inputlist=bankdep) == None):
+            randomcameramove(1)
+            time.sleep(0.1)
+        pyautogui.keyDown('up')
+        time.sleep(uniform(1.5,2.1))
+        pyautogui.keyUp('up')
+        try:
+            humanmoveobj(imgmatchscreen("img/ironitem.png",inventory))
+            time.sleep(uniform(0.05,0.1))
+            humanclick()
+            humanmovexy(colormatch(inputlist=bankdep)[0],colormatch(inputlist=bankdep)[1])
+            humanclick()
+            time.sleep(uniform(3.0,3.5))
+            humanmoveobj(imgmatchscreen("img/bankall.png",client))
+            humanclick()
+            humanmoveobj((x0+555,y0+15,15,15))
+            time.sleep(uniform(0.1,0.2))
+            humanclick()
+        except:
+            print("bank failed")
+
+    
+    for i in reversed(listoflist):
+        a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
+        humanmovexy(a-randint(9,11),b+randint(-2,2))
+        humanclick()
+        time.sleep(1.0)
+        increment = 0
+        while inMotion() and increment<=400:
+            time.sleep(0.5)
+        increment = 0
+    if colormatch(oretype) == None:
+        bank(skiphalf='yes')
+
+
+    # zero = (219, 19, 177), (247, 3, 192), (172, 31, 106), (130, 47, 58), (221, 18, 179), (247, 3, 195), (213, 15, 171), (180, 41, 150), (180, 41, 151), (216, 15, 156), (218, 14, 159)
+    # one = (151, 3, 243), (139, 14, 197), (122, 30, 133), (140, 13, 200), (106, 45, 72), (106, 45, 71), (140, 13, 201), (138, 13, 196), (120, 28, 133), (139, 12, 201)
+    # two = (65, 23, 202), (62, 76, 78), (63, 50, 138), (67, 5, 244), (65, 24, 199), (66, 22, 203), (64, 50, 139)
+    # three = (227, 19, 183), (201, 29, 163), (202, 30, 163), (199, 30, 162), (160, 46, 133), (228, 20, 179), (204, 34, 146)
+    # four = (151, 3, 243), (139, 14, 197), (122, 30, 133), (140, 13, 200), (106, 45, 72), (106, 45, 71), (140, 13, 201), (138, 13, 196), (120, 28, 133), (139, 12, 201)
+    # five = (219, 19, 177), (247, 3, 192), (172, 31, 106), (130, 47, 58), (221, 18, 179), (247, 3, 195), (213, 15, 171), (180, 41, 150), (180, 41, 151), (216, 15, 156), (218, 14, 159)
+    # bankdep = (228,83,83)
+    # listoflist = [zero,one,two,three,four,five]
+    # for i in listoflist:
+    #     while pixelmap(i) == None:
+    #         randomcameramove(1)
+    #         time.sleep(0.01)
+    #     x,y = pixelmap(i)
+    #     humanmovexy(x,y)
+    #     humanclick()
+    #     time.sleep(1.0)
+    #     while inMotion():
+    #         time.sleep(0.1)
+
+    # for i in reversed(listoflist):
+    #     while pixelmap(i) == None:
+    #         randomcameramove(1)
+    #         time.sleep(0.01)
+    #     x,y = pixelmap(i)
+    #     humanmovexy(x,y)
+    #     humanclick()
+    #     time.sleep(1.0)
+    #     while inMotion():
+    #         time.sleep(0.1)
+    
+    
 
 
 def drop(oretype):
@@ -146,11 +269,40 @@ def drop(oretype):
             l = list(imgmatchscreenall('img/ironitem.png',region1=(inventory)))
             for i in l:
                 pyautogui.keyDown('shift')
+                time.sleep(uniform(0.005,0.01))
                 humanmoveobj(i,safe='yes')        
                 humanclick()
+                time.sleep(uniform(0.005,0.01))
                 pyautogui.keyUp('shift')
     except: 
         return
+
+
+def inMotion():
+    box = motionbox
+    past = pyautogui.screenshot(region=box)
+    time.sleep(0.1)
+    present = pyautogui.screenshot(region=box)
+    if past==present:
+        return False
+    else:
+        return True
+
+def greycursor():
+    greylist = (67,61,61), (64, 59, 59), (50, 46, 46), (42, 38, 38), (34, 30, 30), (29, 26, 26), (47, 43, 43), (44, 41, 41), (25, 23, 23), (37, 33, 33), (39, 35, 35), (57, 52, 52), (62, 56, 56), (60, 54, 54), (53, 48, 47), (55, 49, 49), (31, 27, 27), (22, 20, 20), (9, 7, 7), (12, 10, 10), (15, 14, 14), (19, 17, 17)
+    sx,sy = pyautogui.position()
+    box = (sx-5,sy-5,10,10)
+    im = pyautogui.screenshot(region=box)
+    pimpg = im.load()
+    w,h = im.size
+    for k in range(0,(w*h)):
+        x = randint(0,w-1)
+        y = randint(0,h-1)
+        for i in greylist:
+            if pimpg[x,y] == i:
+                ("FOUND GREY BEFORE CLICK")
+                return True
+    return False
 
 def worldhop():
     print("Hopping worlds")
@@ -159,7 +311,6 @@ def worldhop():
     pyautogui.press("esc")
 
 def nospace():
-    print("no inv space left")
     return len(list(imgmatchscreenall('img/space.png',region1=(inventory),threshold=.45))) ==0
 
 def isfull(oretype):
@@ -174,13 +325,17 @@ def orecount(oretype):
     else:
         return 0
 
+def checkrun():
+    if len(list(imgmatchscreenall('img/fullrun.png',region1=(client))))>0:
+        humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.95))
+        humanclick()
 
 def checkstats():
     rando = uniform(1.1,3.2)
     stat = imgmatchscreen("img/statbar.png", region1=client)
-    humanmoveobj(stat,safe='yes')
+    humanmoveobj(stat)
     humanclick()
-    minestat = imgmatchscreen("img/miningstat.png", region1=client)
+    minestat = imgmatchscreen("img/miningstat.png", region1=client,)
     humanmoveobj(minestat)
     time.sleep(rando)
     bag = imgmatchscreen("img/bag.png", region1=client)
@@ -189,12 +344,11 @@ def checkstats():
 
 
 
-def randomcameramove():
-    steps = randint(1,5)
+def randomcameramove(steps):
     for i in range (steps):
         key = randint(1,4)
         delay = uniform(0.005,0.01)
-        hold = uniform(0.3,1.8)
+        hold = uniform(0.3,1.0)
         if key == 1:
             print('pressing left')
             pyautogui.keyDown('left')
@@ -221,30 +375,32 @@ def randomcameramove():
             time.sleep(delay)
 
 def humanmoveobj(obj, safe='no'):
-    speed = uniform(0.2,0.5)
+    sleep = uniform(0.0018,0.0032)
     x = randint(obj[0], obj[0]+obj[2])
     y = randint(obj[1], obj[1]+obj[3])
     time.sleep(uniform(0.05,0.08))
     
     if safe=='no':
-        bezmouse.go((x,y))
+        bezmouse.go((x,y),sleep=sleep)
     elif safe=='yes':
-        bezmouse.go((x,y),deviation=10)
+        bezmouse.go((x,y),deviation=10,speed=2,sleep=sleep)
     time.sleep(uniform(0.05,0.15))
 
 
 def humanmovexy(x,y):
-    speed = uniform(0.5,1.3)
-    bezmouse.go((x,y))
-    time.sleep(uniform(0.05,0.08))
-
+    try:
+        sleep = uniform(0.0018,0.0032)
+        bezmouse.go((x,y),sleep=sleep)
+        time.sleep(uniform(0.05,0.08))
+    except:
+        print("Move failed")
+        return
 
 def humanclick():
     timer=(uniform(0.01,0.015))
     time.sleep((timer/2) - 0.0005)
     pyautogui.mouseDown()
     time.sleep(timer)
-    print("slept for " + str(timer))
     pyautogui.mouseUp()
     #time.sleep((timer/2) - 0.0009)
     
@@ -253,7 +409,6 @@ def humanrclick():
     time.sleep((timer/2) - 0.00005)
     pyautogui.mouseDown(button='right')
     time.sleep(timer)
-    print("slept for " + str(timer))
     pyautogui.mouseUp(button='right')
     time.sleep((timer/2) - 0.00009)
 
@@ -279,6 +434,9 @@ client=(x0,y0,765,502)
 textnotif=(x0+3,y0+440,236,25)
 gamewindow=(x0+5,y0+4,515,334)
 inventory=(x0+549,y0+210,183,253)
+motionbox=(x0+300,y0,45,45)
+mapbox=(x0+568,y0+11,151,151)
+bankdep = (228,83,83),(227,82,82)
 oretype = "iron" #pyautogui.prompt("Ore Select 'copper' or 'iron'")
 print("Selected ore: " + str(oretype))
 pyautogui.screenshot(imageFilename="debug/inventory.png", region=(inventory))
@@ -287,6 +445,7 @@ pyautogui.screenshot(imageFilename="debug/gamewindow.png", region=(gamewindow))
 pyautogui.screenshot(imageFilename="debug/inventory.png", region=(inventory))
 pyautogui.screenshot(imageFilename="debug/client.png", region=(client))
 pyautogui.screenshot(imageFilename="debug/texnotif.png", region=(textnotif))
+pyautogui.screenshot(imageFilename="debug/mapbox.png", region=(mapbox))
 print(x0,y0)
 
 
@@ -294,19 +453,26 @@ start_time = time.time()
 
 #MAIN LOOP
 while True:
+    #bank()
+    checkrun()
     odds=randint(1,100)
     now = round(time.time() - start_time)
     print(str(now/60) + 'minutes of runtime' )
     if (isfull(oretype) or nospace()):
         print("full")
-        drop(oretype)    
-    if odds <= 20:
+        #drop(oretype)
+        bank()
+        failedCount = 0
+    if colormatch(inputlist=bankdep) != None:
+        bank(skiphalf='yes')
+    if odds <= 10:
         qxy = None
-        randomcameramove()
-    if failedCount >= 10:
+        randomcameramove(randint(1,5))
+    if failedCount >= 5:
         worldhop()
         failedCount = 0
     if (isfull(oretype) == False):
         #print("not full")
         #print(coppercount())
-        mine(oretype,queuexy= qxy)
+        mine(oretype)
+
