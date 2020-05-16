@@ -152,7 +152,7 @@ def mouse_bez(init_pos, fin_pos, deviation, speed):
 #     time.sleep(0.0)
 
 
-def go(destxy,deviation=60,speed=3,sleep=0.0025):
+def go(destxy,deviation=50,speed=3,sleep=0.0025):
     startxy = pyautogui.position()
     path = mouse_bez(startxy,destxy,deviation,speed)
     for i in path:

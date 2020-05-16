@@ -49,24 +49,33 @@ def mine(oretype):
     # while inMotion():
     #     print("Moving")
     increment=0
-    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.60))) == 0 and increment <=20 and clicked: 
-        increment+=2
-        time.sleep(0.2)
-    if increment == 20:
+    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=200 and clicked : 
+        increment+=1
+        time.sleep(0.001)
+    if increment == 300:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
         return
 
-    qxy = colormatch(oretype)
+    oldx,oldy = pyautogui.position()
+    newx,newy = oldx,oldy
     try:
+        while oldx-50<newx<oldx+50 or oldy-50<newy<oldy+50:
+            qxy = colormatch(oretype)
+            newx,newy = qxy
+    except:
+        print("No iron on screen")
+    try:
+
         humanmovexy(qxy[0],qxy[1])
+
     except:
         print("move failed during mine")
     increment=0
-    while orecount(oretype) <= oldcount and increment <= 20 and clicked:
+    while orecount(oretype) <= oldcount and increment <= 200 and clicked:
         print("Waiting for ore")
         increment+=1
-        time.sleep(0.2)
+        time.sleep(0.01)
     if increment >= 20:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
@@ -97,10 +106,8 @@ def colormatch(oretype='iron',move="no",inputlist=None):
             y = randint(0,h-1)
             for i in rgblist:
                 if pimpg[x,y] == i:
-                    print("found match at: " + str(x)+" "+str(y))
                     x=x+gamewindow[0]
                     y=y+gamewindow[1]
-                    print (x,y)
                     return x,y
     except:
         print("No color found")
@@ -126,9 +133,7 @@ def imgmatchscreen(small, region1=None, threshold=0.7):
     counter=0
     print("starting img match loop")
     while max_val <= threshold and counter<=250:
-
         ssht = pyautogui.screenshot(imageFilename=None, region=region1)
-        time.sleep(0.01)
         img = numpy.array(ssht)
         image = img[:, :, ::-1].copy()
         template = cv2.imread(small,cv2.IMREAD_COLOR) 
@@ -142,7 +147,7 @@ def imgmatchscreen(small, region1=None, threshold=0.7):
         x0,y0 = region1[:2]
         x=x+x0
         y=y+y0
-    imgbox = x,y,w,h
+    imgbox = x,y,w-1,h-1
     print ("returning" + str(imgbox))
     return imgbox
 
@@ -164,7 +169,7 @@ def imgmatchscreenall(small, region1=None, threshold=0.6):
             x0,y0 = region1[:2]
             x=x+x0
             y=y+y0
-        locbox.append((x,y,w,h))
+        locbox.append((x,y,w-1,h-1))
     return locbox
 
 def bank(skiphalf='no'):
@@ -289,10 +294,10 @@ def drop(oretype):
             l = list(imgmatchscreenall('img/ironitem.png',region1=(inventory)))
             for i in l:
                 pyautogui.keyDown('shift')
-                time.sleep(uniform(0.005,0.01))
-                humanmoveobj(i,safe='yes')        
+                time.sleep(uniform(0.01,0.015))
+                humanmoveobj(i,safe='yes',speed=1,sleep=0.002)        
                 humanclick()
-                time.sleep(uniform(0.005,0.01))
+                time.sleep(uniform(0.01,0.015))
                 pyautogui.keyUp('shift')
     except: 
         return
@@ -394,7 +399,7 @@ def randomcameramove(steps):
             pyautogui.keyUp('down')
             time.sleep(delay)
 
-def humanmoveobj(obj, safe='no'):
+def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
     sleep = uniform(0.0018,0.0032)
     x = randint(obj[0], obj[0]+obj[2])
     y = randint(obj[1], obj[1]+obj[3])
@@ -402,15 +407,15 @@ def humanmoveobj(obj, safe='no'):
     
     if safe=='no':
         overshoot(x,y)
-        bezmouse.go((x,y),sleep=sleep)
+        bezmouse.go((x,y),sleep=sleep,speed=speed)
     elif safe=='yes':
-        bezmouse.go((x,y),deviation=10,speed=2,sleep=sleep)
+        bezmouse.go((x,y),deviation=10,speed=speed,sleep=sleep)
     time.sleep(uniform(0.01,0.03))
 
 
 def overshoot(x,y):
     sleep = uniform(0.0018,0.0032)
-    if randint(0,10)>=1:
+    if randint(0,10)>=3:
         return 
     currentx,currenty = pyautogui.position()
     if currentx<=x:
@@ -426,12 +431,12 @@ def overshoot(x,y):
     bezmouse.go(((xdir*x2)+x,(ydir*y2)+y),sleep=sleep)
 
 
-def humanmovexy(x,y,safe='no'):
+def humanmovexy(x,y,safe='no',speed=3,sleep=0.0025):
     try:
         if (safe=='no'):
             overshoot(x,y)
         sleep = uniform(0.0010,0.0025)
-        bezmouse.go((x,y),sleep=sleep)
+        bezmouse.go((x,y),sleep=sleep,speed=speed)
         time.sleep(uniform(0.01,0.03))
     except:
         print("Move failed")
@@ -501,8 +506,8 @@ while True:
     print(str(now/60) + 'minutes of runtime' )
     if (isfull(oretype) or nospace()):
         print("full")
-        #drop(oretype)
-        bank()
+        drop(oretype)
+        #bank()
         failedCount = 0
     if colormatch(inputlist=bankdep) != None:
         bank(skiphalf='yes')
