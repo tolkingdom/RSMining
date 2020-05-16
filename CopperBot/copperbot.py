@@ -33,8 +33,8 @@ def mine(oretype):
         if greycursor() == False:
             humanclick()
             clicked=True
-            time.sleep(uniform(0.04,0.09))
-            if statrand>=90:
+            time.sleep(uniform(0.005,0.02))
+            if statrand>=95:
                 randomcameramove(randint(1,2))
         else:
             qxy=None
@@ -42,6 +42,7 @@ def mine(oretype):
     else:
         qxy = None
     if statrand==50:
+        time.sleep(uniform(0.0100,0.0400))
         checkstats()
         return
     
@@ -122,8 +123,10 @@ def colormatch(oretype='iron',move="no",inputlist=None):
 # pyautogui.pixelMatchesColor
 def imgmatchscreen(small, region1=None, threshold=0.7):
     max_val=0.0
-    while max_val <= threshold:
-        print("starting img match loop")
+    counter=0
+    print("starting img match loop")
+    while max_val <= threshold and counter<=250:
+
         ssht = pyautogui.screenshot(imageFilename=None, region=region1)
         time.sleep(0.01)
         img = numpy.array(ssht)
@@ -133,6 +136,7 @@ def imgmatchscreen(small, region1=None, threshold=0.7):
         result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
         x,y = max_loc
+        counter+=1
     print("max val for this match was "+str(max_val))
     if region1!=None:
         x0,y0 = region1[:2]
@@ -165,7 +169,7 @@ def imgmatchscreenall(small, region1=None, threshold=0.6):
 
 def bank(skiphalf='no'):
     increment = 0
-    humanmoveobj((x0+555,y0+15,15,15))
+    humanmoveobj((x0+555,y0+15,15,15),safe='yes')
     time.sleep(uniform(0.1,0.2))
     humanclick()
     zero = "img/0.png"
@@ -174,25 +178,30 @@ def bank(skiphalf='no'):
     three = "img/3.png"
     four = "img/4.png"
     five = "img/5.png"
+    six = "img/6.png"
+    seven ="img/7.png"
     bankdep = (228,83,83),(227,82,82)
-    listoflist = [zero,one,two,three,four,five]
+    listoflist = [zero,one,two,three,four,five,six,seven]
     if skiphalf == 'no':
-        for i in listoflist:
+        for pos,i in enumerate(listoflist):
+
             time.sleep(0.1)
             a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
-            humanmovexy(a+randint(9,11),b+randint(-2,2))
+            humanmovexy(a+randint(-2,2),b+randint(-2,2),safe='yes')
             humanclick()
             time.sleep(1.0)
             # while inMotion() and increment<=400:
             #     time.sleep(0.1)
             if i != listoflist[-1]:
-                imgmatchscreen(listoflist[i+1],region=mapbox)
+                imgmatchscreen(listoflist[pos+1],region1=mapbox,threshold=0.97)
             
             increment = 0
         checkrun()
-        while(colormatch(inputlist=bankdep) == None):
+        while((colormatch(inputlist=bankdep) == None) or inMotion()):
             randomcameramove(1)
             time.sleep(0.1)
+        
+        
         pyautogui.keyDown('up')
         time.sleep(uniform(1.5,2.1))
         pyautogui.keyUp('up')
@@ -203,26 +212,29 @@ def bank(skiphalf='no'):
             humanmovexy(colormatch(inputlist=bankdep)[0],colormatch(inputlist=bankdep)[1])
             humanclick()
             time.sleep(uniform(3.0,3.5))
-            humanmoveobj(imgmatchscreen("img/bankall.png",client))
+            humanmoveobj(imgmatchscreen("img/bankall.png",client),safe='yes')
             humanclick()
-            humanmoveobj((x0+555,y0+15,15,15))
+            humanmoveobj((x0+555,y0+15,15,15),safe='yes')
             time.sleep(uniform(0.1,0.2))
             humanclick()
         except:
             print("bank failed")
 
     
-    for i in reversed(listoflist):
+    for pos,i in enumerate(reversed(listoflist)):
+        print(i)
         time.sleep(0.1)
         a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
-        humanmovexy(a-randint(9,11),b+randint(-2,2))
+        humanmovexy(randint(a,a+c),randint(b,b+d),safe='yes')
         humanclick()
         time.sleep(1.0)
         increment = 0
         # while inMotion() and increment<=400:
         #     time.sleep(0.5)
-        if i != listoflist[-1]:
-            imgmatchscreen(listoflist[i+1],region=mapbox)
+        if i != listoflist[0]:
+            print(listoflist[-(pos+1)])
+            imgmatchscreen(listoflist[-(pos+1)],region1=mapbox,threshold=0.95)
+            time.sleep(6.0)
         increment = 0
     if colormatch(oretype) == None:
         bank(skiphalf='yes')
@@ -322,7 +334,7 @@ def nospace():
     return len(list(imgmatchscreenall('img/space.png',region1=(inventory),threshold=.45))) ==0
 
 def isfull(oretype):
-    return (orecount(oretype)>=24)
+    return (orecount(oretype)>=27)
 
 
 def orecount(oretype):
@@ -335,7 +347,7 @@ def orecount(oretype):
 
 def checkrun():
     if len(list(imgmatchscreenall('img/fullrun.png',region1=(client))))>0:
-        humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.95))
+        humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.6))
         humanclick()
 
 def checkstats():
@@ -386,20 +398,41 @@ def humanmoveobj(obj, safe='no'):
     sleep = uniform(0.0018,0.0032)
     x = randint(obj[0], obj[0]+obj[2])
     y = randint(obj[1], obj[1]+obj[3])
-    time.sleep(uniform(0.05,0.08))
+    time.sleep(uniform(0.01,0.02))
     
     if safe=='no':
+        overshoot(x,y)
         bezmouse.go((x,y),sleep=sleep)
     elif safe=='yes':
         bezmouse.go((x,y),deviation=10,speed=2,sleep=sleep)
-    time.sleep(uniform(0.05,0.15))
+    time.sleep(uniform(0.01,0.03))
 
 
-def humanmovexy(x,y):
+def overshoot(x,y):
+    sleep = uniform(0.0018,0.0032)
+    if randint(0,10)>=1:
+        return 
+    currentx,currenty = pyautogui.position()
+    if currentx<=x:
+        xdir = 1
+    else:
+        xdir = -1
+    if currenty<=y:
+        ydir = 1
+    else:
+        ydir = -1
+    x2=randint(10,25)
+    y2=randint(10,25)
+    bezmouse.go(((xdir*x2)+x,(ydir*y2)+y),sleep=sleep)
+
+
+def humanmovexy(x,y,safe='no'):
     try:
-        sleep = uniform(0.0018,0.0032)
+        if (safe=='no'):
+            overshoot(x,y)
+        sleep = uniform(0.0010,0.0025)
         bezmouse.go((x,y),sleep=sleep)
-        time.sleep(uniform(0.05,0.08))
+        time.sleep(uniform(0.01,0.03))
     except:
         print("Move failed")
         return
@@ -413,7 +446,7 @@ def humanclick():
     #time.sleep((timer/2) - 0.0009)
     
 def humanrclick():
-    timer=(uniform(0.01,0.015))
+    timer=(uniform(0.005,0.015))
     time.sleep((timer/2) - 0.00005)
     pyautogui.mouseDown(button='right')
     time.sleep(timer)
