@@ -487,8 +487,8 @@ def randomcameramove(steps,honly='no'):
 
 def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
     sleep = uniform(0.0018,0.0032)
-    x = randint(obj[0], obj[0]+obj[2])
-    y = randint(obj[1], obj[1]+obj[3])
+    x = randint(obj[0], obj[0]+obj[2]-1)
+    y = randint(obj[1], obj[1]+obj[3]-1)
     time.sleep(uniform(0.01,0.02))
     
     if safe=='no':
@@ -497,6 +497,8 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
     elif safe=='yes':
         bezmouse.go((x,y),deviation=10,speed=speed,sleep=sleep)
     time.sleep(uniform(0.01,0.03))
+    if pyautogui.position() != x,y:
+        pyautogui.moveTo(x,y,time.random(uniform(0.3)),tween=pyautogui.easeInQuad)
 
 def humanzoomout():
     t = randint(20,100)
