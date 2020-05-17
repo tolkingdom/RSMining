@@ -245,10 +245,18 @@ def bank(skiphalf='no'):
         except:
             a = None
     print("Found Ore, clicking and Zooming IN")
+
     time.sleep(uniform(0.05,0.08))
     humanclick()
-    time.sleep(uniform(3,5))
+    time.sleep(uniform(1,2))
+    oldcount = orecount(oretype)
+    while oldcount == orecount(oretype):
+        time.sleep(0.5)
+        x,y = colormatch(inputlist=(purp))
+        humanmovexy(x,y,safe='yes')
+        humanclick()    
     humanzoomin()
+    
 
 
 
