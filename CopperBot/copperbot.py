@@ -173,12 +173,15 @@ def imgmatchscreenall(small, region1=None, threshold=0.6):
     return locbox
 
 def bank(skiphalf='no'):
+    salmon = (192,84,84),(239,104,104),(234,103,102)
+    purp = (250,0,255),(200,0,205)
+
     print("Starting BANK run")
     humanzoomout()
     print("Looking for ladder")
     while matchtooltip('img/ladder.png') == False:
         try:
-            x,y = colormatch(inputlist=(239,104,104))
+            x,y = colormatch(inputlist=(salmon))
             humanmovexy(x,y)
         except:
             a = None
@@ -188,8 +191,11 @@ def bank(skiphalf='no'):
     time.sleep(uniform(0.5,1.5))
     print("Looking for bank booth")
     while matchtooltip('img/bankbooth.png') == False:
-        x,y = colormatch(inputlist=((239,104,104),(238,103,103)))
-        humanmovexy(x,y)
+        try:
+            x,y = colormatch(inputlist=(salmon))
+            humanmovexy(x,y)
+        except:
+            a = None
     print("Found bank booth, clicking")
     time.sleep(uniform(0.05,0.08)) 
     humanclick()
@@ -216,16 +222,22 @@ def bank(skiphalf='no'):
     humanclick()
     print("Looking for ladder")
     while matchtooltip('img/ladder.png') == False:
-        x,y = colormatch(inputlist=(250,0,255))
-        humanmovexy(x,y)
+        try:
+            x,y = colormatch(inputlist=(purp))
+            humanmovexy(x,y)
+        except:
+            a = None
     print("Found ladder, clicking")
     time.sleep(uniform(0.05,0.08))
     humanclick()
     time.sleep(uniform(0.5,1.5))
     print("Looking for Ore!")
     while matchtooltip('img/minerocks.png') == False:
-        x,y = colormatch(inputlist=(250,0,255))
-        humanmovexy(x,y)
+        try:
+            x,y = colormatch(inputlist=(purp))
+            humanmovexy(x,y)
+        except:
+            a = None
     print("Found Ore, clicking and Zooming IN")
     time.sleep(uniform(0.05,0.08))
     humanclick()
