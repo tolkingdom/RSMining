@@ -182,7 +182,7 @@ def bank(skiphalf='no'):
     while matchtooltip('img/ladder.png') == False:
         try:
             x,y = colormatch(inputlist=(salmon))
-            humanmovexy(x,y)
+            humanmovexy(x,y,safe='yes')
         except:
             a = None
     print("Found ladder, clicking")
@@ -193,7 +193,7 @@ def bank(skiphalf='no'):
     while matchtooltip('img/bankbooth.png') == False:
         try:
             x,y = colormatch(inputlist=(salmon))
-            humanmovexy(x,y)
+            humanmovexy(x,y,safe='yes')
         except:
             a = None
     print("Found bank booth, clicking")
@@ -226,7 +226,7 @@ def bank(skiphalf='no'):
     while matchtooltip('img/ladder.png') == False:
         try:
             x,y = colormatch(inputlist=(purp))
-            humanmovexy(x,y)
+            humanmovexy(x,y,safe='yes')
         except:
             a = None
     print("Found ladder, clicking")
@@ -234,10 +234,10 @@ def bank(skiphalf='no'):
     humanclick()
     time.sleep(uniform(0.5,1.5))
     print("Looking for Ore!")
-    #while matchtooltip('img/minerocks.png') == False:
+    while matchtooltip('img/minerocks.png') == False:
     try:
         x,y = colormatch(inputlist=(purp))
-        humanmovexy(x,y)
+        humanmovexy(x,y,safe='yes')
     except:
         a = None
     print("Found Ore, clicking and Zooming IN")
@@ -497,12 +497,12 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
 def humanzoomout():
     for i in range(1,50):
         pyautogui.scroll(-1)
-        time.sleep(uniform(0.01,0.03))
+        time.sleep(uniform(0.04,0.06))
 
 def humanzoomin():
     for i in range(1,60):
         pyautogui.scroll(1)
-        time.sleep(uniform(0.01,0.03))
+        time.sleep(uniform(0.04,0.06))
 
 def overshoot(x,y):
     sleep = uniform(0.0018,0.0032)
