@@ -32,8 +32,8 @@ def mine(oretype):
         if greycursor() == False:
             humanclick()
             clicked=True
-            time.sleep(uniform(0.005,0.02))
-            if statrand>=95:
+            time.sleep(uniform(0.2,0.3))
+            if statrand>=97:
                 randomcameramove(randint(1,2),honly='yes')
         else:
             qxy=None
@@ -510,14 +510,14 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
         pyautogui.moveTo(x,y,uniform(0.25,0.35),tween=pyautogui.easeInQuad)
 
 def humanzoomout():
-    t = randint(20,100)
+    t = randint(20,300)
     humanmovexy(client[0]+t,client[1]+t)
-    for i in range(1,40):
+    for i in range(1,30):
         pyautogui.scroll(-1)
         time.sleep(uniform(0.04,0.06))
 
 def humanzoomin():
-    t = randint(20,100)
+    t = randint(20,300)
     humanmovexy(client[0]+t,client[1]+t)
     for i in range(1,50):
         pyautogui.scroll(1)
