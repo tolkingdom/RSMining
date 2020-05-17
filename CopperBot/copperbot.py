@@ -60,14 +60,13 @@ def mine(oretype):
     newx,newy = oldx,oldy
     increment=0
     try:
-        while oldx-55<newx<oldx+55 or oldy-40<newy<oldy+55 and matchtooltip('img/takeiron.png') and increment!=55:
+        while oldx-55<newx<oldx+55 or oldy-40<newy<oldy+55 and increment!=55:
             qxy = colormatch(oretype)
             newx,newy = qxy
             increment+=1
     except:
         print("No iron on screen")
     try:
-
         humanmovexy(qxy[0],qxy[1])
 
     except:
@@ -77,7 +76,7 @@ def mine(oretype):
         print("Waiting for ore")
         increment+=1
         time.sleep(0.025)
-    if increment >= 100:
+    if increment >= 25:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
     
