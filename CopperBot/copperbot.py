@@ -504,14 +504,14 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
 def humanzoomout():
     t = randint(20,100)
     humanmovexy(client[0]+t,client[1]+t)
-    for i in range(1,50):
+    for i in range(1,40):
         pyautogui.scroll(-1)
         time.sleep(uniform(0.04,0.06))
 
 def humanzoomin():
     t = randint(20,100)
     humanmovexy(client[0]+t,client[1]+t)
-    for i in range(1,60):
+    for i in range(1,50):
         pyautogui.scroll(1)
         time.sleep(uniform(0.04,0.06))
 
