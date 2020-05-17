@@ -594,6 +594,7 @@ print(x0,y0)
 start_time = time.time()
 
 #MAIN LOOP
+time.sleep(3)
 while True:
     #bank()
     #checkrun()
