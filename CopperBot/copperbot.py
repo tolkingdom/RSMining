@@ -180,6 +180,8 @@ def bank(skiphalf='no'):
         try:
             x,y = colormatch(inputlist=(239,104,104))
             humanmovexy(x,y)
+        except:
+            a = None
     print("Found ladder, clicking")
     time.sleep(uniform(0.05,0.08))    
     humanclick()
