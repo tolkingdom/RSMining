@@ -48,13 +48,13 @@ def mine(oretype):
     # while inMotion():
     #     print("Moving")
     increment=0
-    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=250 and clicked : 
-        increment+=1
-        time.sleep(0.01)
-    if increment >= 250:
-        failedCount+=1
-        print("failcount incremeted to "+str(failedCount))
-        return
+    #while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=20 and clicked : 
+        #increment+=1
+        #time.sleep(0.01)
+    #if increment >= 20:
+        #failedCount+=1
+        #print("failcount incremeted to "+str(failedCount))
+        #return
 
     oldx,oldy = pyautogui.position()
     newx,newy = oldx,oldy
@@ -73,11 +73,11 @@ def mine(oretype):
     except:
         print("move failed during mine")
     increment=0
-    while orecount(oretype) == oldcount and increment <= 150  and clicked:
+    while orecount(oretype) == oldcount and increment <= 100  and clicked:
         print("Waiting for ore")
         increment+=1
-        time.sleep(0.020)
-    if increment >= 150:
+        time.sleep(0.025)
+    if increment >= 100:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
     
