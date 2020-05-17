@@ -177,8 +177,9 @@ def bank(skiphalf='no'):
     humanzoomout()
     print("Looking for ladder")
     while matchtooltip('img/ladder.png') == False:
-        x,y = colormatch(inputlist=(239,104,104))
-        humanmovexy(x,y)
+        try:
+            x,y = colormatch(inputlist=(239,104,104))
+            humanmovexy(x,y)
     print("Found ladder, clicking")
     time.sleep(uniform(0.05,0.08))    
     humanclick()
