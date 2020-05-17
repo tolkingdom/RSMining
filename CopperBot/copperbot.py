@@ -27,8 +27,8 @@ def mine(oretype):
     #     qxy = colormatch(oretype)
     # if pyautogui.position != qxy:
     #     humanmovexy(qxy[0],qxy[1])
+    oldcount = orecount(oretype)
     if len(list(imgmatchscreenall('img/minerocks.png',region1=(client),threshold=0.60))) > 0:
-        oldcount = orecount(oretype)
         if greycursor() == False:
             humanclick()
             clicked=True
