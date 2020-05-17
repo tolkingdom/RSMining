@@ -449,7 +449,7 @@ def checkstats():
 def checkrun():
     if len(list(imgmatchscreenall('img/fullrun.png',region1=(client))))>0:
         humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.6))
-        time.sleep(uniform(0.05,0.08))
+        time.sleep(uniform(0.1,0.2))
         humanclick()
 
 
