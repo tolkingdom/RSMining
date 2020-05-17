@@ -234,12 +234,12 @@ def bank(skiphalf='no'):
     humanclick()
     time.sleep(uniform(0.5,1.5))
     print("Looking for Ore!")
-    while matchtooltip('img/minerocks.png') == False:
-        try:
-            x,y = colormatch(inputlist=(purp))
-            humanmovexy(x,y)
-        except:
-            a = None
+    #while matchtooltip('img/minerocks.png') == False:
+    try:
+        x,y = colormatch(inputlist=(purp))
+        humanmovexy(x,y)
+    except:
+        a = None
     print("Found Ore, clicking and Zooming IN")
     time.sleep(uniform(0.05,0.08))
     humanclick()
@@ -434,6 +434,7 @@ def checkstats():
     stat = imgmatchscreen("img/statbar.png", region1=client)
     humanmoveobj(stat)
     humanclick()
+    time.sleep(uniform(0.2,0.4))
     minestat = imgmatchscreen("img/miningstat.png", region1=client,)
     humanmoveobj(minestat)
     time.sleep(rando)
