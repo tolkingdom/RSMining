@@ -34,7 +34,7 @@ def mine(oretype):
             clicked=True
             time.sleep(uniform(0.005,0.02))
             if statrand>=95:
-                randomcameramove(randint(1,2))
+                randomcameramove(randint(1,2),honly='yes')
         else:
             qxy=None
            
@@ -60,7 +60,7 @@ def mine(oretype):
     newx,newy = oldx,oldy
     increment=0
     try:
-        while oldx-40<newx<oldx+40 or oldy-40<newy<oldy+40 and increment!=50:
+        while oldx-55<newx<oldx+55 or oldy-40<newy<oldy+55 and matchtooltip('img/takeiron.png') and increment!=55:
             qxy = colormatch(oretype)
             newx,newy = qxy
             increment+=1
@@ -73,7 +73,7 @@ def mine(oretype):
     except:
         print("move failed during mine")
     increment=0
-    while orecount(oretype) == oldcount and increment <= 100  and clicked:
+    while orecount(oretype) == oldcount and increment <= 25  and clicked:
         print("Waiting for ore")
         increment+=1
         time.sleep(0.025)
@@ -370,11 +370,13 @@ def checkstats():
 
 
 
-def randomcameramove(steps):
+def randomcameramove(steps,honly='no'):
     for i in range (steps):
         key = randint(1,4)
+        if honly=='yes':
+            key = randint(1,2)
         delay = uniform(0.005,0.01)
-        hold = uniform(0.3,1.0)
+        hold = uniform(0.1,1.0)
         if key == 1:
             print('pressing left')
             pyautogui.keyDown('left')
@@ -470,6 +472,11 @@ def convertxy(x,y):
     print(x2,y2)
     return x2,y2
 
+def matchtooltip(image):
+    cx,cy = pyautogui.position()
+    box = (cx-120,xy-75,240,150)  
+    return len(imgmatchscreenall(image,region1=box))>0
+
 
 qxy = None
 failedCount = 0
@@ -514,7 +521,7 @@ while True:
         #bank(skiphalf='yes')
     if odds <= 10:
         qxy = None
-        randomcameramove(randint(1,5))
+        randomcameramove(randint(1,5),honly='yes')
     if failedCount >= 3:
         worldhop()
         failedCount = 0
