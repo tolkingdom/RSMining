@@ -32,7 +32,7 @@ def mine(oretype):
         if greycursor() == False:
             humanclick()
             clicked=True
-            time.sleep(uniform(0.5,0.8))
+            time.sleep(uniform(0.7,1))
             if statrand>=97:
                 randomcameramove(randint(1,2),honly='yes')
         else:
