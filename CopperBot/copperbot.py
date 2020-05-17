@@ -32,7 +32,7 @@ def mine(oretype):
         if greycursor() == False:
             humanclick()
             clicked=True
-            time.sleep(uniform(0.7,1))
+            time.sleep(uniform(1,1.3))
             if statrand>=97:
                 randomcameramove(randint(1,2),honly='yes')
         else:
@@ -251,10 +251,13 @@ def bank(skiphalf='no'):
     time.sleep(uniform(1,2))
     oldcount = orecount(oretype)
     while oldcount == orecount(oretype):
-        time.sleep(0.5)
-        x,y = colormatch(inputlist=(purp))
-        humanmovexy(x,y,safe='yes')
-        humanclick()    
+        try:
+            time.sleep(0.8)
+            x,y = colormatch(inputlist=(purp))
+            humanmovexy(x,y,safe='yes')
+            humanclick()
+        except:
+            a= None    
     humanzoomin()
     
 
