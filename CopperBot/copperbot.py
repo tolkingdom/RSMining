@@ -499,7 +499,7 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
     time.sleep(uniform(0.01,0.03))
     x2,y2 = pyautogui.position()
     if  x+y != x2+y2:
-        pyautogui.moveTo(x,y,time.random(uniform(0.3)),tween=pyautogui.easeInQuad)
+        pyautogui.moveTo(x,y,uniform(0.25,0.35)),tween=pyautogui.easeInQuad)
 
 def humanzoomout():
     t = randint(20,100)
