@@ -482,12 +482,12 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
 def humanzoomout():
     for i in range(1,4):
         pyautogui.scroll(-12)
-        time.sleep(uniform(0.02,0.35))
+        time.sleep(uniform(0.15,0.35))
 
 def humanzoomin():
     for i in range(1,5):
         pyautogui.scroll(12)
-        time.sleep(uniform(0.02,0.35))
+        time.sleep(uniform(0.15,0.35))
 
 def overshoot(x,y):
     sleep = uniform(0.0018,0.0032)
