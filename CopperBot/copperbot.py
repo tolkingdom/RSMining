@@ -211,6 +211,8 @@ def bank(skiphalf='no'):
     diamond = imgmatchscreen('img/diamond.png',region1=(inventory))
     items = (iron,ruby,sapphire,emerald,diamond)
     for i in items:
+        if i == None:
+            pass
         time.sleep(uniform(0.05,0.1))
         humanmoveobj(i,safe='yes')
         time.sleep(uniform(0.05,0.08))
