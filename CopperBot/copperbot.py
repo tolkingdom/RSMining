@@ -183,6 +183,7 @@ def bank(skiphalf='no'):
         try:
             x,y = colormatch(inputlist=(salmon))
             humanmovexy(x,y,safe='yes')
+            time.sleep(0.1)
         except:
             a = None
     print("Found ladder, clicking")
@@ -194,6 +195,7 @@ def bank(skiphalf='no'):
         try:
             x,y = colormatch(inputlist=(salmon))
             humanmovexy(x,y,safe='yes')
+            time.sleep(0.1)
         except:
             a = None
     print("Found bank booth, clicking")
@@ -227,6 +229,7 @@ def bank(skiphalf='no'):
         try:
             x,y = colormatch(inputlist=(purp))
             humanmovexy(x,y,safe='yes')
+            time.sleep(0.1)
         except:
             a = None
     print("Found ladder, clicking")
@@ -238,6 +241,7 @@ def bank(skiphalf='no'):
         try:
             x,y = colormatch(inputlist=(purp))
             humanmovexy(x,y,safe='yes')
+            time.sleep(0.1)
         except:
             a = None
     print("Found Ore, clicking and Zooming IN")
@@ -495,11 +499,15 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
     time.sleep(uniform(0.01,0.03))
 
 def humanzoomout():
+    t = randint(20,100)
+    humanmovexy(client[0]+t,client[1]+t)
     for i in range(1,50):
         pyautogui.scroll(-1)
         time.sleep(uniform(0.04,0.06))
 
 def humanzoomin():
+    t = randint(20,100)
+    humanmovexy(client[0]+t,client[1]+t)
     for i in range(1,60):
         pyautogui.scroll(1)
         time.sleep(uniform(0.04,0.06))
