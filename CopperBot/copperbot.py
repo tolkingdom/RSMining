@@ -188,7 +188,7 @@ def bank(skiphalf='no'):
     time.sleep(uniform(0.5,1.5))
     print("Looking for bank booth")
     while matchtooltip('img/bankbooth.png') == False:
-        x,y = colormatch(inputlist=((239,104,104),(238,103,103))
+        x,y = colormatch(inputlist=((239,104,104),(238,103,103)))
         humanmovexy(x,y)
     print("Found bank booth, clicking")
     time.sleep(uniform(0.05,0.08)) 
