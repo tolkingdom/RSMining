@@ -131,17 +131,17 @@ def colormatch(oretype='iron',move="no",inputlist=None):
 def imgmatchscreen(small, region1=None, threshold=0.7):
     max_val=0.0
     counter=0
-    print("starting img match loop")
-    while max_val <= threshold and counter<=250:
-        ssht = pyautogui.screenshot(imageFilename=None, region=region1)
-        img = numpy.array(ssht)
-        image = img[:, :, ::-1].copy()
-        template = cv2.imread(small,cv2.IMREAD_COLOR) 
-        h,w,ch = template.shape
-        result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-        x,y = max_loc
-        counter+=1
+    ssht = pyautogui.screenshot(imageFilename=None, region=region1)
+    img = numpy.array(ssht)
+    image = img[:, :, ::-1].copy()
+    template = cv2.imread(small,cv2.IMREAD_COLOR) 
+    h,w,ch = template.shape
+    result = cv2.matchTemplate(image,template,cv2.TM_CCOEFF_NORMED)  
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+    if max_val <= threshold:
+        return
+    x,y = max_loc
+    counter+=1
     print("max val for this match was "+str(max_val))
     if region1!=None:
         x0,y0 = region1[:2]
