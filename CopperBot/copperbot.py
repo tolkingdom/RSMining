@@ -235,11 +235,11 @@ def bank(skiphalf='no'):
     time.sleep(uniform(0.5,1.5))
     print("Looking for Ore!")
     while matchtooltip('img/minerocks.png') == False:
-    try:
-        x,y = colormatch(inputlist=(purp))
-        humanmovexy(x,y,safe='yes')
-    except:
-        a = None
+        try:
+            x,y = colormatch(inputlist=(purp))
+            humanmovexy(x,y,safe='yes')
+        except:
+            a = None
     print("Found Ore, clicking and Zooming IN")
     time.sleep(uniform(0.05,0.08))
     humanclick()
