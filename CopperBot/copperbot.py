@@ -23,7 +23,6 @@ def mine(oretype):
     clicked=False
     statrand = randint(1,100)
     print("Starting Mine")
-    oldcount = orecount(oretype)
     # if qxy == None:
     #     qxy = colormatch(oretype)
     # if pyautogui.position != qxy:
@@ -49,10 +48,10 @@ def mine(oretype):
     # while inMotion():
     #     print("Moving")
     increment=0
-    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=50 and clicked : 
+    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=250 and clicked : 
         increment+=1
-        time.sleep(0.001)
-    if increment == 300:
+        time.sleep(0.01)
+    if increment >= 250:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
         return
@@ -61,7 +60,7 @@ def mine(oretype):
     newx,newy = oldx,oldy
     increment=0
     try:
-        while oldx-50<newx<oldx+50 or oldy-50<newy<oldy+50 and increment!=50:
+        while oldx-40<newx<oldx+40 or oldy-40<newy<oldy+40 and increment!=50:
             qxy = colormatch(oretype)
             newx,newy = qxy
             increment+=1
@@ -74,11 +73,11 @@ def mine(oretype):
     except:
         print("move failed during mine")
     increment=0
-    while orecount(oretype) <= oldcount and increment <= 20  and clicked:
+    while orecount(oretype) == oldcount and increment <= 150  and clicked:
         print("Waiting for ore")
         increment+=1
-        time.sleep(0.01)
-    if increment >= 20:
+        time.sleep(0.020)
+    if increment >= 150:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
     
@@ -502,7 +501,7 @@ start_time = time.time()
 #MAIN LOOP
 while True:
     #bank()
-    checkrun()
+    #checkrun()
     odds=randint(1,100)
     now = round(time.time() - start_time)
     print(str(now/60) + 'minutes of runtime' )
@@ -511,16 +510,16 @@ while True:
         drop(oretype)
         #bank()
         failedCount = 0
-    if colormatch(inputlist=bankdep) != None:
-        bank(skiphalf='yes')
+    #if colormatch(inputlist=bankdep) != None:
+        #bank(skiphalf='yes')
     if odds <= 10:
         qxy = None
         randomcameramove(randint(1,5))
-    if failedCount >= 5:
+    if failedCount >= 3:
         worldhop()
         failedCount = 0
-    if (isfull(oretype) == False):
+    #if (isfull(oretype) == False):
         #print("not full")
         #print(coppercount())
-        mine(oretype)
+    mine(oretype)
 
