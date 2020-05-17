@@ -173,79 +173,136 @@ def imgmatchscreenall(small, region1=None, threshold=0.6):
     return locbox
 
 def bank(skiphalf='no'):
-    increment = 0
-    humanmoveobj((x0+555,y0+15,15,15),safe='yes')
-    time.sleep(uniform(0.1,0.2))
+    print("Starting BANK run")
+    humanzoomout()
+    print("Looking for ladder")
+    while matchtooltip('img/ladder.png') == False:
+        x,y = colormatch(inputlist=(239,104,104))
+        humanmovexy(x,y)
+    print("Found ladder, clicking")
+    time.sleep(uniform(0.05,0.08))    
     humanclick()
-    zero = "img/0.png"
-    one = "img/1.png"
-    two = "img/2.png"
-    three = "img/3.png"
-    four = "img/4.png"
-    five = "img/5.png"
-    six = "img/6.png"
-    seven ="img/7.png"
-    bankdep = (228,83,83),(227,82,82)
-    listoflist = [zero,one,two,three,four,five,six,seven]
-    if skiphalf == 'no':
-        for pos,i in enumerate(listoflist):
+    time.sleep(uniform(0.5,1.5))
+    print("Looking for bank booth")
+    while matchtooltip('img/bankbooth.png') == False:
+        x,y = colormatch(inputlist=(239,104,104))
+        humanmovexy(x,y)
+    print("Found bank booth, clicking")
+    time.sleep(uniform(0.05,0.08)) 
+    humanclick()
+    time.sleep(uniform(3,5))
+    print("Waiting until bank is open")
+    while len(list(imgmatchscreenall('img/inbank.png',region1=(gamewindow),threshold=0.60))) == 0:
+        time.sleep(0.33)
+    print("Inside Bank, clicking all iron ore and gems")
+    iron = imgmatchscreen('img/ironitem.png',region1=(inventory))
+    ruby = imgmatchscreen('img/ruby.png',region1=(inventory))
+    sapphire = imgmatchscreen('img/sapphire.png',region1=(inventory))
+    emerald = imgmatchscreen('img/emerald.png',region1=(inventory))
+    diamond = imgmatchscreen('img/diamond.png',region1=(inventory))
+    items = (iron,ruby,sapphire,emerald,diamond)
+    for i in items:
+        time.sleep(uniform(0.05,0.1))
+        humanmoveobj(i,safe='yes')
+        time.sleep(uniform(0.05,0.08))
+        humanclick()
+    print("Items deposited, clicking X")
+    closebank = imgmatchscreen('img/bankx.png',region1=gamewindow)
+    humanmoveobj(closebank, safe='yes')
+    time.sleep(uniform(0.05,0.08))
+    humanclick()
+    print("Looking for ladder")
+    while matchtooltip('img/ladder.png') == False:
+        x,y = colormatch(inputlist=(250,0,255))
+        humanmovexy(x,y)
+    print("Found ladder, clicking")
+    time.sleep(uniform(0.05,0.08))
+    humanclick()
+    time.sleep(uniform(0.5,1.5))
+    print("Looking for Ore!")
+    while matchtooltip('img/minerocks.png') == False:
+        x,y = colormatch(inputlist=(250,0,255))
+        humanmovexy(x,y)
+    print("Found Ore, clicking and Zooming IN")
+    time.sleep(uniform(0.05,0.08))
+    humanclick()
+    time.sleep(uniform(3,5))
+    humanzoomin()
 
-            time.sleep(0.1)
-            a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
-            humanmovexy(a+randint(-2,2),b+randint(-2,2),safe='yes')
-            humanclick()
-            time.sleep(1.0)
-            # while inMotion() and increment<=400:
-            #     time.sleep(0.1)
-            if i != listoflist[-1]:
-                imgmatchscreen(listoflist[pos+1],region1=mapbox,threshold=0.97)
+
+
+    # increment = 0
+    # humanmoveobj((x0+555,y0+15,15,15),safe='yes')
+    # time.sleep(uniform(0.1,0.2))
+    # humanclick()
+    # zero = "img/0.png"
+    # one = "img/1.png"
+    # two = "img/2.png"
+    # three = "img/3.png"
+    # four = "img/4.png"
+    # five = "img/5.png"
+    # six = "img/6.png"
+    # seven ="img/7.png"
+    # bankdep = (228,83,83),(227,82,82)
+    # listoflist = [zero,one,two,three,four,five,six,seven]
+    # if skiphalf == 'no':
+    #     for pos,i in enumerate(listoflist):
+
+    #         time.sleep(0.1)
+    #         a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
+    #         humanmovexy(a+randint(-2,2),b+randint(-2,2),safe='yes')
+    #         humanclick()
+    #         time.sleep(1.0)
+    #         # while inMotion() and increment<=400:
+    #         #     time.sleep(0.1)
+    #         if i != listoflist[-1]:
+    #             imgmatchscreen(listoflist[pos+1],region1=mapbox,threshold=0.97)
             
-            increment = 0
-        checkrun()
-        while((colormatch(inputlist=bankdep) == None) or inMotion()):
-            randomcameramove(1)
-            time.sleep(0.1)
+    #         increment = 0
+    #     checkrun()
+    #     while((colormatch(inputlist=bankdep) == None) or inMotion()):
+    #         randomcameramove(1)
+    #         time.sleep(0.1)
         
         
-        pyautogui.keyDown('up')
-        time.sleep(uniform(1.5,2.1))
-        pyautogui.keyUp('up')
-        try:
-            humanmoveobj(imgmatchscreen("img/ironitem.png",inventory))
-            time.sleep(uniform(0.05,0.1))
-            humanclick()
-            humanmovexy(colormatch(inputlist=bankdep)[0],colormatch(inputlist=bankdep)[1])
-            humanclick()
-            time.sleep(uniform(3.0,3.5))
-            humanmoveobj(imgmatchscreen("img/bankall.png",client),safe='yes')
-            humanclick()
-            humanmoveobj((x0+555,y0+15,15,15),safe='yes')
-            time.sleep(uniform(0.1,0.2))
-            humanclick()
-        except:
-            print("bank failed")
+    #     pyautogui.keyDown('up')
+    #     time.sleep(uniform(1.5,2.1))
+    #     pyautogui.keyUp('up')
+    #     try:
+    #         humanmoveobj(imgmatchscreen("img/ironitem.png",inventory))
+    #         time.sleep(uniform(0.05,0.1))
+    #         humanclick()
+    #         humanmovexy(colormatch(inputlist=bankdep)[0],colormatch(inputlist=bankdep)[1])
+    #         humanclick()
+    #         time.sleep(uniform(3.0,3.5))
+    #         humanmoveobj(imgmatchscreen("img/bankall.png",client),safe='yes')
+    #         humanclick()
+    #         humanmoveobj((x0+555,y0+15,15,15),safe='yes')
+    #         time.sleep(uniform(0.1,0.2))
+    #         humanclick()
+    #     except:
+    #         print("bank failed")
 
     
-    for pos,i in enumerate(reversed(listoflist)):
-        print(i)
-        time.sleep(0.1)
-        a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
-        humanmovexy(randint(a,a+c),randint(b,b+d),safe='yes')
-        humanclick()
-        time.sleep(1.0)
-        increment = 0
-        # while inMotion() and increment<=400:
-        #     time.sleep(0.5)
-        if i != listoflist[0]:
-            print(listoflist[-(pos+1)])
-            imgmatchscreen(listoflist[-(pos+1)],region1=mapbox,threshold=0.95)
-            time.sleep(6.0)
-        increment = 0
-    if colormatch(oretype) == None:
-        bank(skiphalf='yes')
+    # for pos,i in enumerate(reversed(listoflist)):
+    #     print(i)
+    #     time.sleep(0.1)
+    #     a,b,c,d = imgmatchscreen(i,region1=mapbox,threshold=0.7)
+    #     humanmovexy(randint(a,a+c),randint(b,b+d),safe='yes')
+    #     humanclick()
+    #     time.sleep(1.0)
+    #     increment = 0
+    #     # while inMotion() and increment<=400:
+    #     #     time.sleep(0.5)
+    #     if i != listoflist[0]:
+    #         print(listoflist[-(pos+1)])
+    #         imgmatchscreen(listoflist[-(pos+1)],region1=mapbox,threshold=0.95)
+    #         time.sleep(6.0)
+    #     increment = 0
+    # if colormatch(oretype) == None:
+    #     bank(skiphalf='yes')
 
-
-    # zero = (219, 19, 177), (247, 3, 192), (172, 31, 106), (130, 47, 58), (221, 18, 179), (247, 3, 195), (213, 15, 171), (180, 41, 150), (180, 41, 151), (216, 15, 156), (218, 14, 159)
+   # zero = (219, 19, 177), (247, 3, 192), (172, 31, 106), (130, 47, 58), (221, 18, 179), (247, 3, 195), (213, 15, 171), (180, 41, 150), (180, 41, 151), (216, 15, 156), (218, 14, 159)
     # one = (151, 3, 243), (139, 14, 197), (122, 30, 133), (140, 13, 200), (106, 45, 72), (106, 45, 71), (140, 13, 201), (138, 13, 196), (120, 28, 133), (139, 12, 201)
     # two = (65, 23, 202), (62, 76, 78), (63, 50, 138), (67, 5, 244), (65, 24, 199), (66, 22, 203), (64, 50, 139)
     # three = (227, 19, 183), (201, 29, 163), (202, 30, 163), (199, 30, 162), (160, 46, 133), (228, 20, 179), (204, 34, 146)
@@ -350,7 +407,7 @@ def orecount(oretype):
     else:
         return 0
 
-def checkrun():
+ 
     if len(list(imgmatchscreenall('img/fullrun.png',region1=(client))))>0:
         humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.6))
         humanclick()
@@ -367,6 +424,11 @@ def checkstats():
     humanmoveobj(bag)
     humanclick()
 
+def checkrun():
+    if len(list(imgmatchscreenall('img/fullrun.png',region1=(client))))>0:
+        humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.6))
+        time.sleep(uniform(0.05,0.08))
+        humanclick()
 
 
 def randomcameramove(steps,honly='no'):
@@ -414,6 +476,15 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
         bezmouse.go((x,y),deviation=10,speed=speed,sleep=sleep)
     time.sleep(uniform(0.01,0.03))
 
+def humanzoomout():
+    for i in range(1,4):
+        pyautogui.scroll(-12)
+        time.sleep(uniform(0.02,0.35))
+
+def humanzoomin():
+    for i in range(1,5):
+        pyautogui.scroll(12)
+        time.sleep(uniform(0.02,0.35))
 
 def overshoot(x,y):
     sleep = uniform(0.0018,0.0032)
@@ -473,7 +544,7 @@ def convertxy(x,y):
 
 def matchtooltip(image):
     cx,cy = pyautogui.position()
-    box = (cx-120,xy-75,240,150)  
+    box = (cx-120,cy-75,240,150)  
     return len(imgmatchscreenall(image,region1=box))>0
 
 
@@ -513,8 +584,9 @@ while True:
     print(str(now/60) + 'minutes of runtime' )
     if (isfull(oretype) or nospace()):
         print("full")
-        drop(oretype)
-        #bank()
+        #drop(oretype)
+        checkrun()
+        bank()
         failedCount = 0
     #if colormatch(inputlist=bankdep) != None:
         #bank(skiphalf='yes')
