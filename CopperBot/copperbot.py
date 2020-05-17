@@ -49,7 +49,7 @@ def mine(oretype):
     # while inMotion():
     #     print("Moving")
     increment=0
-    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=200 and clicked : 
+    while len(list(imgmatchscreenall('img/swing.png',region1=(textnotif),threshold=0.50))) == 0 and orecount(oretype)==oldcount and increment <=50 and clicked : 
         increment+=1
         time.sleep(0.001)
     if increment == 300:
@@ -59,10 +59,12 @@ def mine(oretype):
 
     oldx,oldy = pyautogui.position()
     newx,newy = oldx,oldy
+    increment=0
     try:
-        while oldx-50<newx<oldx+50 or oldy-50<newy<oldy+50:
+        while oldx-50<newx<oldx+50 or oldy-50<newy<oldy+50 and increment!=50:
             qxy = colormatch(oretype)
             newx,newy = qxy
+            increment+=1
     except:
         print("No iron on screen")
     try:
@@ -72,7 +74,7 @@ def mine(oretype):
     except:
         print("move failed during mine")
     increment=0
-    while orecount(oretype) <= oldcount and increment <= 200 and clicked:
+    while orecount(oretype) <= oldcount and increment <= 20  and clicked:
         print("Waiting for ore")
         increment+=1
         time.sleep(0.01)
