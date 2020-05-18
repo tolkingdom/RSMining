@@ -441,10 +441,6 @@ def orecount(oretype):
     else:
         return 0
 
- 
-    if len(list(imgmatchscreenall('img/fullrun.png',region1=(client))))>0:
-        humanmoveobj(imgmatchscreen('img/fullrun.png',region1=(client),threshold=0.6))
-        humanclick()
 
 def checkstats():
     rando = uniform(1.1,3.2)
