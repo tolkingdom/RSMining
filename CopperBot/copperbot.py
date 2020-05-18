@@ -94,7 +94,7 @@ def colormatch(oretype='iron',move="no",inputlist=None):
             #img = pyautogui.screenshot(region=gamewindow)
             #pixel = pyautogui.pixel(1,1)
         elif oretype == "iron":
-            rgblist = (64, 34, 23), (61, 31, 22), (47, 25, 15), (34, 17, 12), (50, 26, 17), (43, 22, 14), (30, 15, 10), (57, 30, 20), (26, 14, 9), (39, 20, 14), (54,27,19)
+            rgblist = (64, 34, 23), (61, 31, 22), (47, 25, 15), (34, 17, 12), (50, 26, 17), (43, 22, 14), (30, 15, 10), (57, 30, 20), (26, 14, 9), (39, 20, 14), (54,27,19),(47, 25, 15), (57, 30, 20), (48, 25, 16), (39, 20, 14), (50, 26, 17), (54, 27, 19), (34, 17, 12), (43, 22, 14), (31, 15, 10), (45, 23, 14), (54, 28, 19), (26, 14, 9), (59, 30, 21), (53, 27, 18)
         if inputlist != None: 
             rgblist = inputlist
         im = pyautogui.screenshot(region=gamewindow)
@@ -255,7 +255,7 @@ def bank(skiphalf='no'):
             x,y = colormatch(inputlist=(purp))
             humanmovexy(x,y,safe='yes')
             humanclick()
-            randomcameramove()
+            randomcameramove(honly='yes')
             time.sleep(4)
         except:
             a= None    
@@ -515,18 +515,18 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
         pyautogui.moveTo(x,y,uniform(0.25,0.35),tween=pyautogui.easeInQuad)
 
 def humanzoomout(clicks):
-    t = randint(20,300)
+    t = randint(20,200)
     humanmovexy(client[0]+t,client[1]+t)
     for i in range(1,clicks):
         pyautogui.scroll(-1)
-        time.sleep(uniform(0.04,0.06))
+        time.sleep(uniform(0.08,0.1))
 
 def humanzoomin(clicks):
-    t = randint(20,300)
+    t = randint(20,200)
     humanmovexy(client[0]+t,client[1]+t)
     for i in range(1,clicks):
         pyautogui.scroll(1)
-        time.sleep(uniform(0.04,0.06))
+        time.sleep(uniform(0.08,0.1))
 
 def overshoot(x,y):
     sleep = uniform(0.0018,0.0032)
