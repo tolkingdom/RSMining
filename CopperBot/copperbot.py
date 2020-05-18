@@ -177,7 +177,7 @@ def bank(skiphalf='no'):
     purp = (250,0,255),(200,0,205)
 
     print("Starting BANK run")
-    humanzoomout()
+    humanzoomout(36)
     print("Looking for ladder")
     while matchtooltip('img/ladder.png') == False:
         try:
@@ -252,13 +252,15 @@ def bank(skiphalf='no'):
     oldcount = orecount(oretype)
     while oldcount == orecount(oretype):
         try:
-            time.sleep(0.8)
             x,y = colormatch(inputlist=(purp))
             humanmovexy(x,y,safe='yes')
             humanclick()
+            randomcameramove()
+            time.sleep(4)
         except:
             a= None    
-    humanzoomin()
+    humanzoomin(50)
+    humanzoomout(4)
     
 
 
@@ -512,17 +514,17 @@ def humanmoveobj(obj, safe='no',speed=3,sleep=0.0025):
     if  x+y != x2+y2:
         pyautogui.moveTo(x,y,uniform(0.25,0.35),tween=pyautogui.easeInQuad)
 
-def humanzoomout():
+def humanzoomout(clicks):
     t = randint(20,300)
     humanmovexy(client[0]+t,client[1]+t)
-    for i in range(1,36):
+    for i in range(1,clicks):
         pyautogui.scroll(-1)
         time.sleep(uniform(0.04,0.06))
 
-def humanzoomin():
+def humanzoomin(clicks):
     t = randint(20,300)
     humanmovexy(client[0]+t,client[1]+t)
-    for i in range(1,50):
+    for i in range(1,clicks):
         pyautogui.scroll(1)
         time.sleep(uniform(0.04,0.06))
 
