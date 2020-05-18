@@ -260,7 +260,7 @@ def bank(skiphalf='no'):
         except:
             a= None    
     humanzoomin(50)
-    humanzoomout(4)
+    humanzoomout(7)
     
 
 
