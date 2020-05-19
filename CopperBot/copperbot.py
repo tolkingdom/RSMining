@@ -76,6 +76,8 @@ def mine(oretype):
         print("Waiting for ore")
         increment+=1
         time.sleep(0.025)
+        if oretype=='copper':
+            time.sleep((5))
     if increment >= 25:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
@@ -374,13 +376,12 @@ def drop(oretype):
         if oretype == "copper":
             l = list(imgmatchscreenall('img/copperitem.png',region1=(inventory)))
             for i in l:
-                humanmoveobj(i,safe='yes')
-                humanrclick()
-                try:
-                    humanmoveobj(imgmatchscreenall('img/dropcop.png',region1=(client)),safe='yes')
-                except:
-                    humanmoveobj(imgmatchscreen('img/dropyellow.png',region1=(client)),safe=yes)                
+                pyautogui.keyDown('shift')
+                time.sleep(uniform(0.01,0.015))
+                humanmoveobj(i,safe='yes',speed=1,sleep=0.002)        
                 humanclick()
+                time.sleep(uniform(0.01,0.015))
+                pyautogui.keyUp('shift')
         if oretype == "iron":
             l = list(imgmatchscreenall('img/ironitem.png',region1=(inventory)))
             for i in l:
@@ -599,7 +600,7 @@ inventory=(x0+549,y0+210,183,253)
 motionbox=(x0+300,y0,45,45)
 mapbox=(x0+568,y0+11,151,151)
 bankdep = (228,83,83),(227,82,82)
-oretype = "iron" #pyautogui.prompt("Ore Select 'copper' or 'iron'")
+oretype = pyautogui.prompt("Ore Select 'copper' or 'iron'")
 print("Selected ore: " + str(oretype))
 pyautogui.screenshot(imageFilename="debug/inventory.png", region=(inventory))
 pyautogui.screenshot(imageFilename="debug/client.png", region=(client))
@@ -623,9 +624,9 @@ while True:
     print(str(now/60) + 'minutes of runtime' )
     if (isfull(oretype) or nospace()):
         print("full")
-        #drop(oretype)
+        drop(oretype)
         checkrun()
-        bank()
+        #bank()
         failedCount = 0
     #if colormatch(inputlist=bankdep) != None:
         #bank(skiphalf='yes')
