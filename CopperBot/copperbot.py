@@ -72,13 +72,13 @@ def mine(oretype):
     except:
         print("move failed during mine")
     increment=0
-    while orecount(oretype) == oldcount and increment <= 25  and clicked:
+    while orecount(oretype) == oldcount and increment <= 15  and clicked:
         print("Waiting for ore")
         increment+=1
-        time.sleep(0.025)
+        time.sleep(0.5)
         if oretype=='copper':
             time.sleep((5))
-    if increment >= 25:
+    if increment >= 15:
         failedCount+=1
         print("failcount incremeted to "+str(failedCount))
     
